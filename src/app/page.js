@@ -3,31 +3,26 @@ import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [recipes, setRecipes] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // 레시피 목록 가져오기
     fetch('/api/recipes')
       .then(res => res.json())
-      .then(data => setRecipes(data));
+      .then(data => {
+        if (Array.isArray(data)) {
+          setRecipes(data);
+        } else {
+          console.error('데이터가 배열이 아닙니다:', data);
+          setRecipes([]);
+        }
+      })
+      .catch(err => {
+        console.error('데이터 로딩 중 에러:', err);
+        setError(err.message);
+      });
   }, []);
 
-  // 새 레시피 추가하는 함수
-  const addRecipe = async (recipeData) => {
-    const res = await fetch('/api/recipes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(recipeData)
-    });
-    const data = await res.json();
-    // 성공하면 목록 새로고침
-    if (data.id) {
-      fetch('/api/recipes')
-        .then(res => res.json())
-        .then(data => setRecipes(data));
-    }
-  };
+  if (error) return <div>에러가 발생했습니다: {error}</div>;
 
   return (
     <div>
