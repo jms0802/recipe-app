@@ -1,38 +1,82 @@
-'use client';
-import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { openDb } from '@/lib/db';
 
-export default function Home() {
-  const [recipes, setRecipes] = useState([]);
-  const [error, setError] = useState(null);
+async function getRecipes() {
+  const db = await openDb();
+  const recipes = await db.all('SELECT * FROM recipes');
+  return recipes;
+}
 
-  useEffect(() => {
-    fetch('/api/recipes')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setRecipes(data);
-        } else {
-          console.error('데이터가 배열이 아닙니다:', data);
-          setRecipes([]);
-        }
-      })
-      .catch(err => {
-        console.error('데이터 로딩 중 에러:', err);
-        setError(err.message);
-      });
-  }, []);
+// 조리방법 텍스트를 줄바꿈으로 변환하는 함수
+function formatInstructions(text) {
+  return text
+    .replace(/@/g, '\n')            // /n을 줄바꿈으로
+    .split('\n')                      // 줄바꿈으로 분리
+    .map(line => line.trim())         // 각 줄의 앞뒤 공백 제거
+    .filter(line => line.length > 0); // 빈 줄 제거
+}
 
-  if (error) return <div>에러가 발생했습니다: {error}</div>;
+export default async function Home() {
+  const recipes = await getRecipes();
 
   return (
-    <div>
-      <h1>나의 레시피 북</h1>
+    <div className="container">
       {recipes.map(recipe => (
-        <div key={recipe.id}>
-          <h2>{recipe.title}</h2>
-          <p>조리시간: {recipe.cooking_time}분</p>
-          <p>재료: {recipe.ingredients}</p>
-          <p>조리방법: {recipe.instructions}</p>
+        <div key={recipe.id} className="recipe-card">
+          <h1 className="recipe-title">{recipe.title}</h1>
+          
+          <div className="recipe-layout">
+            {/* 왼쪽: 이미지 */}
+            {recipe.image_url && (
+              <div className="image-container">
+                <Image 
+                  src={recipe.image_url}
+                  alt={recipe.title}
+                  fill
+                  sizes="400px"
+                  style={{ objectFit: 'cover' }}
+                  priority={true}
+                />
+              </div>
+            )}
+
+            {/* 오른쪽: 내용 */}
+            <div className="content-container">
+              <div className="recipe-info-grid">
+                <div className="info-item">
+                  <span className="info-label">난이도:</span>
+                  <span className="info-value">{recipe.difficulty}</span>
+                </div>
+                <div className="info-item">
+                  <span className="info-label">카테고리:</span>
+                  <span className="info-value">{recipe.category}</span>
+                </div>
+                <div className="info-item">
+                  <span className="info-label">조리시간:</span>
+                  <span className="info-value">{recipe.cooking_time}분</span>
+                </div>
+                <div className="info-item">
+                  <span className="info-label">몇인분:</span>
+                  <span className="info-value">{recipe.serving_size}인분</span>
+                </div>
+              </div>
+
+              <div className="recipe-section">
+                <h2 className="section-title">재료</h2>
+                <p className="ingredients-list">{recipe.ingredients}</p>
+              </div>
+            </div>
+            <div>
+                <h2 className="section-title">조리방법</h2>
+                <div className="instructions">
+                  {formatInstructions(recipe.instructions).map((step, index) => (
+                    <p key={index} className="instruction-step">
+                      {index + 1}. {step}
+                    </p>
+                  ))}
+                </div>
+              </div>
+          </div>
         </div>
       ))}
     </div>

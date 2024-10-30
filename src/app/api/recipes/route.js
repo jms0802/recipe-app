@@ -21,11 +21,26 @@ export async function POST(request) {
   try {
     const db = await openDb();
     const body = await request.json();
-    const { title, ingredients, instructions, cooking_time } = body;
+    const { 
+      title, 
+      ingredients, 
+      instructions, 
+      cooking_time,
+      difficulty,
+      category,
+      serving_size,
+      image_url 
+    } = body;
     
     const result = await db.run(
-      'INSERT INTO recipes (title, ingredients, instructions, cooking_time) VALUES (?, ?, ?, ?)',
-      [title, ingredients, instructions, cooking_time]
+      `INSERT INTO recipes (
+        title, ingredients, instructions, cooking_time, 
+        difficulty, category, serving_size, image_url
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        title, ingredients, instructions, cooking_time,
+        difficulty, category, serving_size, image_url
+      ]
     );
     
     return NextResponse.json({ 
