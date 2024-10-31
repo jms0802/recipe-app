@@ -15,17 +15,19 @@ export default function RecipeForm({ imageUrl }) {
     });
 
     useEffect(() => {
-        setRecipe(prev => ({
-            ...prev,
-            image_url: imageUrl
-        }));
+        if (imageUrl) {
+            setRecipe(prev => ({
+                ...prev,
+                image_url: imageUrl
+            }));
+        }
     }, [imageUrl]);
-
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setRecipe(prev => ({
             ...prev,
-            [name]: value
+            [name]: value.slice(0, 1000000)
         }));
     };
 

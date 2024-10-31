@@ -1,23 +1,41 @@
-import { openDb } from '@/lib/db';
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import RecipeCard from '@/components/RecipeCard';
 
-async function getRecipes() {
-  const db = await openDb();
-  const recipes = await db.all('SELECT * FROM recipes');
-  return recipes;
-}
+export default function RecipeList() {
+    const [recipes, setRecipes] = useState([]);
+    const router = useRouter();
 
-export default async function RecipeList() {
-  const recipes = await getRecipes();
+    useEffect(() => {
+        fetchRecipes();
+    }, []);
 
-  return (
-    <div className="container">
-      {recipes.map(recipe => (
-        <RecipeCard 
-          key={recipe.id} 
-          recipe={recipe} 
-        />
-      ))}
-    </div>
-  );
+    const fetchRecipes = async () => {
+        const response = await fetch('/api/recipes');
+        const data = await response.json();
+        setRecipes(data);
+    };
+
+    const handleEdit = (recipe) => {
+        router.push(`/recipes/edit/${recipe.id}`);
+    };
+
+    const handleDelete = (deletedId) => {
+        setRecipes(recipes.filter(recipe => recipe.id !== deletedId));
+    };
+
+    return (
+        <div className="container">
+            {recipes.map(recipe => (
+                <RecipeCard 
+                    key={recipe.id} 
+                    recipe={recipe}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                />
+            ))}
+        </div>
+    );
 }

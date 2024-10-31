@@ -1,13 +1,36 @@
+'use client';
+
 import Image from 'next/image';
 
-export default function RecipeCard({ recipe }) {
+export default function RecipeCard({ recipe, onEdit, onDelete }) {
+    const handleDelete = async () => {
+        if (window.confirm('정말로 이 레시피를 삭제하시겠습니까?')) {
+            try {
+                const response = await fetch(`/api/recipes/${recipe.id}`, {
+                    method: 'DELETE',
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || '삭제 실패');
+                }
+                
+                onDelete(recipe.id);
+            } catch (error) {
+                console.error('삭제 중 오류 발생:', error);
+                alert('레시피 삭제 중 오류가 발생했습니다.');
+            }
+        }
+    };
+
     return (
         <div className="recipe-card">
             <div className="recipe-header">
                 <h1 className="recipe-title">{recipe.title}</h1>
                 <div className="recipe-button">
-                    <button>수정</button>
-                    <button>삭제</button>
+                    <button onClick={() => onEdit(recipe)}>수정</button>
+                    <button onClick={handleDelete}>삭제</button>
                 </div>
             </div>
             <div className="recipe-layout">
