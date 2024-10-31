@@ -1,5 +1,6 @@
 import "./globals.css";
 import Link from 'next/link';
+import NavLink from '@/components/NavLink';
 
 export const metadata = {
   title: "Recipe App",
@@ -15,9 +16,9 @@ export default function RootLayout({ children }) {
             <div className="nav-container">
               <h1>레시피 앱</h1>
               <ul className="nav-menu">
-                <li><Link href="/">홈</Link></li>
-                <li><Link href="/recipes">레시피 목록</Link></li>
-                <li><Link href="/create">레시피 작성</Link></li>
+                <li><NavLink href="/">홈</NavLink></li>
+                <li><NavLink href="/list">레시피 목록</NavLink></li>
+                <li><NavLink href="/create">레시피 작성</NavLink></li>
               </ul>
             </div>
           </nav>

@@ -3,6 +3,12 @@ body {
     background-color: #2C3E50;
 }
 
+h1 {
+    font-weight: bold;
+    color: #2C3E50;
+    margin: 1rem;
+}
+
 .container {
     margin: 0 auto;
     padding: 20px;
@@ -28,6 +34,54 @@ body {
     margin-bottom: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+.recipe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.recipe-button {
+    display: flex;
+    gap: 10px;
+    /* 버튼 사이 간격 */
+}
+
+.recipe-button button {
+    padding: 8px 16px;
+    margin-left: 8px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  /* 수정 버튼 */
+  .recipe-button button:first-child {
+    background-color: #2196F3; /* 밝은 파란색 */
+    color: white;
+  }
+  
+  /* 삭제 버튼 */
+  .recipe-button button:last-child {
+    background-color: #607D8B; /* 회청색 */
+    color: white;
+  }
+  
+  /* 호버 효과 */
+  .recipe-button button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  /* 클릭 효과 */
+  .recipe-button button:active {
+    transform: translateY(0);
+  }
+
 
 /* 레시피 제목 */
 .recipe-title {
@@ -153,10 +207,7 @@ body {
 
 .nav-container h1 {
     font-size: 2.2rem;
-    font-weight: bold;
     text-align: center;
-    color: #2C3E50;
-    margin: 1rem;
 }
 
 .nav-menu {
@@ -249,7 +300,8 @@ body {
 /* 1440px ~ 1024px 사이에서 세로 배치로 변경 */
 @media (max-width: 1440px) and (min-width: 1025px) {
     .recipe-layout {
-        grid-template-columns: 1fr;  /* 세로 배치로 변경 */
+        grid-template-columns: 1fr;
+        /* 세로 배치로 변경 */
     }
 
     .image-container {
@@ -260,4 +312,19 @@ body {
     .content-container {
         max-width: 100%;
     }
+}
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    color: #ffffff;
+    margin-bottom: 2rem;
 }
