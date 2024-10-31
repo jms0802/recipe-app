@@ -12,6 +12,12 @@ const nextConfig = {
       },
     ],
   },
+  // 파일 업로드 크기 제한 설정
+  api: {
+    bodyParser: {
+      sizeLimit: '5mb',
+    },
+  },
 };
 
 export default nextConfig;
