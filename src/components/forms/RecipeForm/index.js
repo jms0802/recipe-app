@@ -14,15 +14,6 @@ export default function RecipeForm({ imageUrl }) {
         image_url: imageUrl || ''
     });
 
-    useEffect(() => {
-        if (imageUrl) {
-            setRecipe(prev => ({
-                ...prev,
-                image_url: imageUrl
-            }));
-        }
-    }, [imageUrl]);
-    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setRecipe(prev => ({
